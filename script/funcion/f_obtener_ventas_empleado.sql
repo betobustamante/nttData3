@@ -14,15 +14,23 @@ create or replace function obtener_ventas_empleado (id_empleado in number)
 return sys_refcursor
  is
   v_ventas sys_refcursor;
+  err_num NUMBER;
+  err_msg VARCHAR2(255);
  begin 
-    dbms_output.put_line('BEGIN - Procedimiento');
+   dbms_output.put_line('BEGIN - Procedimiento');	
    OPEN v_ventas FOR 
    SELECT ID_VENTA, VALOR_VENTA 
    FROM VENTAS 
    WHERE ID_EMPLEADO = id_empleado;
    return v_ventas;
+   
+   EXCEPTION
+		WHEN OTHERS THEN
+		 err_num := SQLCODE;
+		 err_msg := SQLERRM;
+		 dbms_output.put_line('Error = ' || err_num || '-' || err_msg );   
  end obtener_ventas_empleado;
- /
+/
 
 --Ejecución 
 SET SERVEROUTPUT ON
